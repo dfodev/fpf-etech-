@@ -29,7 +29,7 @@ func adicionarPessoa() {
 	json.Unmarshal(dados, &pessoas)
 
 	fmt.Println(pessoas)
-	pessoa = append(pessoas, pessoa)
+	pessoas = append(pessoas, pessoa)
 
 	jsonBytes, _ := json.MarshalIndent(pessoas, "", "")
 	os.WriteFile(arquivo, jsonBytes, 0644)
@@ -39,13 +39,15 @@ func adicionarPessoa() {
 
 func buscarPessoa() {
 	arquivo := "pessoa.json"
+	var find string
 	dados, _ := os.ReadFile(arquivo)
-
+	fmt.Println("Digite o nome da pessoa:")
+	fmt.Scanln(&find)
 	var pessoas []Pessoa
 	json.Unmarshal(dados, &pessoas)
 
 	for i := range pessoas {
-		if pessoas[i].Pessoa == "alexandre" {
+		if pessoas[i].Nome == find {
 			fmt.Println("CPF ENCONTRADO: ", pessoas[i].CPF)
 		}
 	}
@@ -62,7 +64,7 @@ func atualizarPessoa() {
 	json.Unmarshal(dados, &pessoas)
 
 	for i := range pessoas {
-		if pessoas[i].Pessoa == "alexandre" {
+		if pessoas[i].Nome == "alexandre" {
 			pessoas[i].CPF = " "
 		}
 	}
@@ -80,7 +82,7 @@ func deletarPessoa() {
 
 	var novaPessoa []Pessoa
 	for i := range pessoas {
-		if pessoas[i].Pessoa != "alexandre" {
+		if pessoas[i].Nome != "alexandre" {
 			novaPessoa = append(novaPessoa, pessoas[i])
 		}
 	}
@@ -89,5 +91,33 @@ func deletarPessoa() {
 	os.WriteFile(arquivo, jsonBytes, 0644)
 }
 func main() {
+	var opcao int
+	for {
+		fmt.Println("\n--- Gerenciador de Pessoas ---")
+		fmt.Println("1. Adicionar Pessoa")
+		fmt.Println("2. Buscar Pessoa")
+		fmt.Println("3. Atualizar Pessoa")
+		fmt.Println("4. Deletar Pessoa")
+		fmt.Println("0. Sair")
+		fmt.Print("Escolha uma opção: ")
 
+		fmt.Scanln(&opcao)
+
+		switch opcao {
+		case 1:
+			adicionarPessoa()
+		case 2:
+			buscarPessoa()
+		case 3:
+			atualizarPessoa()
+		case 4:
+			deletarPessoa()
+		case 0:
+			fmt.Println("Saindo do programa...")
+			return // Encerra o programa
+		default:
+			fmt.Println("Opção inválida! Tente novamente.")
+
+		}
+	}
 }
